@@ -1,21 +1,19 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { usePosts, useTags } from './usePostsQuery'
 import { useUsers } from '@features/user/model'
 
-export const useAll = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
+interface UseAllParams {
+  skip: number
+  limit: number
+  searchQuery: string
+  sortBy: string
+  sortOrder: string
+  selectedTag: string
+}
 
-  // const { skip, limit, searchQuery, sortBy, sortOrder, selectedTag } = params
+export const useAll = (urlParams: UseAllParams) => {
+  const { skip, limit, searchQuery, sortBy, sortOrder, selectedTag } = urlParams
 
-  const [skip, setSkip] = useState(parseInt(queryParams.get('skip') || '0'))
-  const [limit, setLimit] = useState(parseInt(queryParams.get('limit') || '10'))
-  const [searchQuery, setSearchQuery] = useState(queryParams.get('search') || '')
-  const [sortBy, setSortBy] = useState(queryParams.get('sortBy') || '')
-  const [sortOrder, setSortOrder] = useState(queryParams.get('sortOrder') || 'asc')
-  const [selectedTag, setSelectedTag] = useState(queryParams.get('tag') || '')
   const [selectedPost, setSelectedPost] = useState(null)
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
@@ -28,18 +26,6 @@ export const useAll = () => {
   const [showPostDetailDialog, setShowPostDetailDialog] = useState(false)
   const [showUserModal, setShowUserModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
-
-  // URL 업데이트 함수
-  const updateURL = () => {
-    const params = new URLSearchParams()
-    if (skip) params.set('skip', skip.toString())
-    if (limit) params.set('limit', limit.toString())
-    if (searchQuery) params.set('search', searchQuery)
-    if (sortBy) params.set('sortBy', sortBy)
-    if (sortOrder) params.set('sortOrder', sortOrder)
-    if (selectedTag) params.set('tag', selectedTag)
-    navigate(`?${params.toString()}`)
-  }
 
   // 상태 관리
   const { data: user } = useUsers({
@@ -199,21 +185,12 @@ export const useAll = () => {
     }
   }
 
-  useEffect(() => {
-    updateURL()
-  }, [skip, limit, sortBy, sortOrder, selectedTag])
-
   return {
     posts: data?.posts.map((post) => ({ ...post, author: user?.users.find((user) => user.id === post.userId) })),
     total: data?.total,
-    skip: data?.skip,
     tags,
-    limit,
-    searchQuery,
     selectedPost,
     setSelectedPost,
-    sortBy,
-    sortOrder,
     showAddDialog,
     setShowAddDialog,
     showEditDialog,
@@ -221,7 +198,6 @@ export const useAll = () => {
     newPost,
     setNewPost,
     isLoading,
-    selectedTag,
     comments,
     selectedComment,
     setSelectedComment,
@@ -246,12 +222,5 @@ export const useAll = () => {
     likeComment,
     openPostDetail,
     openUserModal,
-
-    setSkip,
-    setLimit,
-    setSearchQuery,
-    setSortBy,
-    setSortOrder,
-    setSelectedTag,
   }
 }

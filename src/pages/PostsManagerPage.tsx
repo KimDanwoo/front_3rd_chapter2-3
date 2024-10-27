@@ -24,47 +24,51 @@ import {
   Textarea,
 } from '@shared/ui'
 import { useAll } from '@features/posts/model/hooks/useAll'
+import { useQueryParams } from '@shared/lib/hooks'
 
 const PostsManager = () => {
   const {
-    posts,
-    total,
     skip,
     setSkip,
     limit,
     setLimit,
     searchQuery,
     setSearchQuery,
-    selectedPost,
-    setSelectedPost,
     sortBy,
     setSortBy,
     sortOrder,
     setSortOrder,
-    showAddDialog,
-    setShowAddDialog,
-    showEditDialog,
-    setShowEditDialog,
-    newPost,
-    setNewPost,
-    isLoading,
-    tags,
     selectedTag,
     setSelectedTag,
+  } = useQueryParams()
+
+  const {
+    posts,
+    total,
+    selectedPost,
+    showAddDialog,
+    showEditDialog,
+    newPost,
+    isLoading,
+    tags,
     comments,
     selectedComment,
-    setSelectedComment,
     newComment,
-    setNewComment,
     showAddCommentDialog,
-    setShowAddCommentDialog,
     showEditCommentDialog,
-    setShowEditCommentDialog,
     showPostDetailDialog,
-    setShowPostDetailDialog,
     showUserModal,
-    setShowUserModal,
     selectedUser,
+    setSelectedPost,
+    setShowAddDialog,
+    setShowEditDialog,
+    setNewPost,
+    setSelectedComment,
+    setNewComment,
+    setShowAddCommentDialog,
+    setShowEditCommentDialog,
+    setShowPostDetailDialog,
+    setShowUserModal,
     addPost,
     updatePost,
     deletePost,
@@ -74,7 +78,14 @@ const PostsManager = () => {
     likeComment,
     openPostDetail,
     openUserModal,
-  } = useAll()
+  } = useAll({
+    skip,
+    limit,
+    searchQuery,
+    sortBy,
+    sortOrder,
+    selectedTag,
+  })
 
   // 하이라이트 함수 추가
   const highlightText = (text: string, highlight: string) => {
