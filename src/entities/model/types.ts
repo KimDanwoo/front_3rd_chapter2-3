@@ -23,6 +23,7 @@ export interface Post {
 }
 
 export interface User {
+  id: number
   image: string
   username: string
   firstName: string
@@ -47,4 +48,5 @@ export interface Comment {
   id: number
   likes: number
   postId: number
+  user: User
 }

@@ -14,3 +14,13 @@ export function useUsers({ limit = 0, select = 'username,image' }: UseUsersParam
     },
   })
 }
+
+export function useSelectedUser(selectedUser: { id: number }) {
+  return useQuery({
+    queryKey: ['user', selectedUser?.id],
+    queryFn: async () => {
+      return await userApi.getById(selectedUser.id)
+    },
+    enabled: false,
+  })
+}
