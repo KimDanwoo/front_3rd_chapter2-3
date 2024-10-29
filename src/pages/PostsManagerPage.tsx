@@ -23,24 +23,46 @@ import {
   TableRow,
   Textarea,
 } from '@shared/ui'
-import { useAll } from '@features/posts/model/hooks/useAll'
+import { usePosts } from '@features/posts/model/hooks/usePosts'
 import { useQueryParams } from '@shared/lib/hooks'
+import { useComment } from '@features/comments/model/hooks'
+import { useUser } from '@features/user/model/useUser'
+import { HighLightText } from '@widgets/ui'
+import { useTags } from '@features/tags/model'
 
 const PostsManager = () => {
   const {
     skip,
-    setSkip,
     limit,
-    setLimit,
     searchQuery,
-    setSearchQuery,
     sortBy,
-    setSortBy,
     sortOrder,
-    setSortOrder,
     selectedTag,
+    setSkip,
+    setLimit,
+    setSearchQuery,
+    setSortBy,
+    setSortOrder,
     setSelectedTag,
   } = useQueryParams()
+
+  const {
+    newComment,
+    comments,
+    selectedComment,
+    showAddCommentDialog,
+    showEditCommentDialog,
+    setNewComment,
+    setSelectedComment,
+    setShowAddCommentDialog,
+    setShowEditCommentDialog,
+    addComment,
+    updateComment,
+    deleteComment,
+    likeComment,
+  } = useComment()
+
+  const { tags } = useTags()
 
   const {
     posts,
@@ -50,57 +72,19 @@ const PostsManager = () => {
     showEditDialog,
     newPost,
     isLoading,
-    tags,
-    comments,
-    selectedComment,
-    newComment,
-    showAddCommentDialog,
-    showEditCommentDialog,
     showPostDetailDialog,
-    showUserModal,
-    selectedUser,
     setSelectedPost,
     setShowAddDialog,
     setShowEditDialog,
     setNewPost,
-    setSelectedComment,
-    setNewComment,
-    setShowAddCommentDialog,
-    setShowEditCommentDialog,
     setShowPostDetailDialog,
-    setShowUserModal,
     addPost,
     updatePost,
     deletePost,
-    addComment,
-    updateComment,
-    deleteComment,
-    likeComment,
     openPostDetail,
-    openUserModal,
-  } = useAll({
-    skip,
-    limit,
-    searchQuery,
-    sortBy,
-    sortOrder,
-    selectedTag,
-  })
+  } = usePosts({ skip, limit, searchQuery, selectedTag })
 
-  // 하이라이트 함수 추가
-  const highlightText = (text: string, highlight: string) => {
-    if (!text) return null
-    if (!highlight.trim()) {
-      return <span>{text}</span>
-    }
-    const regex = new RegExp(`(${highlight})`, 'gi')
-    const parts = text.split(regex)
-    return (
-      <span>
-        {parts.map((part, i) => (regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>))}
-      </span>
-    )
-  }
+  const { userDetailData, showUserModal, openUserModal, setShowUserModal } = useUser()
 
   // 게시물 테이블 렌더링
   const renderPostTable = () => (
@@ -120,7 +104,9 @@ const PostsManager = () => {
             <TableCell>{post.id}</TableCell>
             <TableCell>
               <div className="space-y-1">
-                <div>{highlightText(post.title, searchQuery)}</div>
+                <div>
+                  <HighLightText text={post.title} highlight={searchQuery} />
+                </div>
 
                 <div className="flex flex-wrap gap-1">
                   {post.tags?.map((tag) => (
@@ -182,7 +168,7 @@ const PostsManager = () => {
   )
 
   // 댓글 렌더링
-  const renderComments = (postId) => (
+  const renderComments = (postId: number) => (
     <div className="mt-2">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold">댓글</h3>
@@ -203,7 +189,9 @@ const PostsManager = () => {
             <div key={comment.id} className="flex items-center justify-between text-sm border-b pb-1">
               <div className="flex items-center space-x-2 overflow-hidden">
                 <span className="font-medium truncate">{comment.user.username}:</span>
-                <span className="truncate">{highlightText(comment.body, searchQuery)}</span>
+                <span className="truncate">
+                  <HighLightText text={comment.body} highlight={searchQuery} />
+                </span>
               </div>
               <div className="flex items-center space-x-1">
                 <Button variant="ghost" size="sm" onClick={() => likeComment(comment.id, postId)}>
@@ -241,6 +229,7 @@ const PostsManager = () => {
           </Button>
         </CardTitle>
       </CardHeader>
+
       <CardContent>
         <div className="flex flex-col gap-4">
           {/* 검색 및 필터 컨트롤 */}
@@ -362,20 +351,22 @@ const PostsManager = () => {
           <DialogHeader>
             <DialogTitle>게시물 수정</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <Input
-              placeholder="제목"
-              value={selectedPost?.title || ''}
-              onChange={(e) => setSelectedPost({ ...selectedPost, title: e.target.value })}
-            />
-            <Textarea
-              rows={15}
-              placeholder="내용"
-              value={selectedPost?.body || ''}
-              onChange={(e) => setSelectedPost({ ...selectedPost, body: e.target.value })}
-            />
-            <Button onClick={updatePost}>게시물 업데이트</Button>
-          </div>
+          {selectedPost && (
+            <div className="space-y-4">
+              <Input
+                placeholder="제목"
+                value={selectedPost.title || ''}
+                onChange={(e) => setSelectedPost({ ...selectedPost, title: e.target.value })}
+              />
+              <Textarea
+                rows={15}
+                placeholder="내용"
+                value={selectedPost.body || ''}
+                onChange={(e) => setSelectedPost({ ...selectedPost, body: e.target.value })}
+              />
+              <Button onClick={updatePost}>게시물 업데이트</Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -415,15 +406,18 @@ const PostsManager = () => {
 
       {/* 게시물 상세 보기 대화상자 */}
       <Dialog open={showPostDetailDialog} onOpenChange={setShowPostDetailDialog}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{highlightText(selectedPost?.title, searchQuery)}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p>{highlightText(selectedPost?.body, searchQuery)}</p>
-            {renderComments(selectedPost?.id)}
-          </div>
-        </DialogContent>
+        {selectedPost && (
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>
+                <HighLightText text={selectedPost.title} highlight={searchQuery} />
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p>{renderComments(selectedPost.id)}</p>
+            </div>
+          </DialogContent>
+        )}
       </Dialog>
 
       {/* 사용자 모달 */}
@@ -432,31 +426,37 @@ const PostsManager = () => {
           <DialogHeader>
             <DialogTitle>사용자 정보</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <img src={selectedUser?.image} alt={selectedUser?.username} className="w-24 h-24 rounded-full mx-auto" />
-            <h3 className="text-xl font-semibold text-center">{selectedUser?.username}</h3>
-            <div className="space-y-2">
-              <p>
-                <strong>이름:</strong> {selectedUser?.firstName} {selectedUser?.lastName}
-              </p>
-              <p>
-                <strong>나이:</strong> {selectedUser?.age}
-              </p>
-              <p>
-                <strong>이메일:</strong> {selectedUser?.email}
-              </p>
-              <p>
-                <strong>전화번호:</strong> {selectedUser?.phone}
-              </p>
-              <p>
-                <strong>주소:</strong> {selectedUser?.address?.address}, {selectedUser?.address?.city},{' '}
-                {selectedUser?.address?.state}
-              </p>
-              <p>
-                <strong>직장:</strong> {selectedUser?.company?.name} - {selectedUser?.company?.title}
-              </p>
+          {userDetailData && (
+            <div className="space-y-4">
+              <img
+                src={userDetailData.image}
+                alt={userDetailData.username}
+                className="w-24 h-24 rounded-full mx-auto"
+              />
+              <h3 className="text-xl font-semibold text-center">{userDetailData.username}</h3>
+              <div className="space-y-2">
+                <p>
+                  <strong>이름:</strong> {userDetailData.firstName} {userDetailData.lastName}
+                </p>
+                <p>
+                  <strong>나이:</strong> {userDetailData.age}
+                </p>
+                <p>
+                  <strong>이메일:</strong> {userDetailData.email}
+                </p>
+                <p>
+                  <strong>전화번호:</strong> {userDetailData.phone}
+                </p>
+                <p>
+                  <strong>주소:</strong> {userDetailData.address?.address}, {userDetailData.address?.city},{' '}
+                  {userDetailData.address?.state}
+                </p>
+                <p>
+                  <strong>직장:</strong> {userDetailData.company?.name} - {userDetailData.company?.title}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
     </Card>
