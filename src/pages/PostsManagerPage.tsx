@@ -29,6 +29,8 @@ import { useComment } from '@features/comments/model/hooks'
 import { useUser } from '@features/user/model/useUser'
 import { HighLightText } from '@widgets/ui'
 import { useTags } from '@features/tags/model'
+import { useUsers } from '@features/user/model'
+import { useCreatePost, useDeletePost, useFetchPosts, useUpdatePost } from '@features/posts/model/hooks'
 
 const PostsManager = () => {
   const {
@@ -65,26 +67,71 @@ const PostsManager = () => {
   const { tags } = useTags()
 
   const {
-    posts,
-    total,
     selectedPost,
     showAddDialog,
     showEditDialog,
     newPost,
-    isLoading,
     showPostDetailDialog,
     setSelectedPost,
     setShowAddDialog,
     setShowEditDialog,
     setNewPost,
     setShowPostDetailDialog,
-    addPost,
-    updatePost,
-    deletePost,
     openPostDetail,
-  } = usePosts({ skip, limit, searchQuery, selectedTag })
+  } = usePosts()
 
   const { userDetailData, showUserModal, openUserModal, setShowUserModal } = useUser()
+
+  const { data: userData } = useUsers({
+    limit: 0,
+    select: 'username,image',
+  })
+
+  const { data: postsData, isLoading } = useFetchPosts({
+    limit,
+    skip,
+    searchQuery,
+    tag: selectedTag,
+  })
+
+  const posts = postsData?.posts.map((post) => ({
+    ...post,
+    author: userData?.users.find((user) => user.id === post.userId),
+  }))
+
+  const addPost = async () => {
+    const createPostMutation = useCreatePost()
+    try {
+      await createPostMutation.mutateAsync(newPost)
+      setShowAddDialog(false)
+      setNewPost({ title: '', body: '', userId: 1, tags: [], reactions: { likes: 0, dislikes: 0 } })
+    } catch (error) {
+      console.error('게시물 추가 오류:', error)
+      throw new Error('게시물을 추가하는데 실패했습니다')
+    }
+  }
+
+  const updatePost = async () => {
+    const updatePostMutation = useUpdatePost()
+    try {
+      if (!selectedPost) throw new Error('선택된 게시물이 없습니다')
+      await updatePostMutation.mutateAsync(selectedPost)
+      setShowEditDialog(false)
+    } catch (error) {
+      console.error('게시물 업데이트 오류:', error)
+      throw new Error('게시물을 업데이트하는데 실패했습니다')
+    }
+  }
+
+  const deletePost = async (id: number) => {
+    const deletePostMutation = useDeletePost()
+    try {
+      await deletePostMutation.mutateAsync(id)
+    } catch (error) {
+      console.error('게시물 삭제 오류:', error)
+      throw new Error('게시물을 삭제하는데 실패했습니다')
+    }
+  }
 
   // 게시물 테이블 렌더링
   const renderPostTable = () => (
@@ -308,7 +355,7 @@ const PostsManager = () => {
               <Button disabled={skip === 0} onClick={() => setSkip(Math.max(0, skip - limit))}>
                 이전
               </Button>
-              <Button disabled={skip + limit >= total} onClick={() => setSkip(skip + limit)}>
+              <Button disabled={skip + limit >= postsData?.total} onClick={() => setSkip(skip + limit)}>
                 다음
               </Button>
             </div>
