@@ -1,1 +1,1 @@
-export * from './CommentCart'
+export { CommentCard } from './comment-card'

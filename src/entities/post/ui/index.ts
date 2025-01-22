@@ -1,2 +1,1 @@
-export * from './PostTableHeader'
-export * from './PostReactions'
+export { PostReaction } from './post-reaction'

@@ -1,4 +1,4 @@
-import { User } from '@entities/comment/model/types'
+import { User } from '@entities/user/model'
 import { FC } from 'react'
 
 interface UserAvatarProps {

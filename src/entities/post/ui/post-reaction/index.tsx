@@ -1,12 +1,12 @@
-import { Reactions } from '@entities/comment/model/types'
+import { Reactions } from '@entities/post/model'
 import { ThumbsDown, ThumbsUp } from 'lucide-react'
 import { FC } from 'react'
 
-interface PostReactionsProps {
+interface PostReactionProps {
   reactions: Reactions
 }
 
-export const PostReactions: FC<PostReactionsProps> = ({ reactions }) => {
+export const PostReaction: FC<PostReactionProps> = ({ reactions }) => {
   return (
     <div className="flex items-center gap-2">
       <ThumbsUp className="w-4 h-4" />

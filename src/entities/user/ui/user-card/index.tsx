@@ -1,5 +1,5 @@
+import { User } from '@entities/user/model'
 import { FC } from 'react'
-import { User } from '@entities/comment/model/types'
 
 interface UserCardProps {
   user: User | null
