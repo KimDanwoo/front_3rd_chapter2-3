@@ -1,4 +1,4 @@
-import { Comment, CommentMutationState, NewComment } from '@entities/comment/model/types'
+import { Comment, CommentMutationState, NewComment } from '@entities/comment/model'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { commentApi } from '@features/comment/api'
 

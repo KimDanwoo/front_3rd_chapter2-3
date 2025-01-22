@@ -1,4 +1,4 @@
-import { PostAction, PostState } from '@entities/comment/model/types'
+import { PostAction, PostState } from '@entities/post/model'
 import { create } from 'zustand'
 
 export const postStore = create<PostState & PostAction>((set) => ({
@@ -8,7 +8,7 @@ export const postStore = create<PostState & PostAction>((set) => ({
   showEditDialog: false,
   showPostDetailDialog: false,
   setNewPost: (newPost) => set({ newPost }),
-  
+
   setSelectedPost: (selectedPost) => set({ selectedPost }),
   setShowAddDialog: (showAddDialog) => set({ showAddDialog }),
   setShowEditDialog: (showEditDialog) => set({ showEditDialog }),

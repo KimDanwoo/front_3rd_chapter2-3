@@ -1,7 +1,7 @@
 import { Select } from '@shared/ui'
 import { SelectLayout } from '@shared/ui'
-import { useTags } from '@features/tag/model/hooks'
-import { filterStore } from '@features/post/model/stores'
+import { useTags } from '@features/tag/model'
+import { filterStore } from '@features/post/model'
 
 export const TagSelect = () => {
   const { selectedTag, setSelectedTag } = filterStore()

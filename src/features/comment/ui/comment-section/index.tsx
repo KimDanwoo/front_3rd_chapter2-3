@@ -1,10 +1,9 @@
-import { useComments } from '@features/comment/model/hooks'
-import { commentStore } from '@features/comment/model/stores'
-import { filterStore, postStore } from '@features/post/model/stores'
-import { Button } from '@shared/ui'
-import { CommentCard } from '@entities/comment/ui'
-import { Edit2, ThumbsUp, Trash2 } from 'lucide-react'
 import { useCallback } from 'react'
+import { useComments, commentStore } from '@features/comment/model'
+import { filterStore, postStore } from '@features/post/model'
+import { CommentCard } from '@entities/comment/ui'
+import { Button } from '@shared/ui'
+import { Edit2, ThumbsUp, Trash2 } from 'lucide-react'
 
 export const CommentSection = () => {
   const { selectedPost } = postStore()
@@ -38,6 +37,7 @@ export const CommentSection = () => {
                 <ThumbsUp className="w-3 h-3" />
                 <span className="ml-1 text-xs">{comment.likes}</span>
               </Button>
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -48,6 +48,7 @@ export const CommentSection = () => {
               >
                 <Edit2 className="w-3 h-3" />
               </Button>
+
               <Button variant="ghost" size="sm" onClick={() => handleDeleteComment(comment.id)}>
                 <Trash2 className="w-3 h-3" />
               </Button>

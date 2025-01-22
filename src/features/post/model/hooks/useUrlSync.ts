@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { filterStore } from '../stores'
+import { filterStore } from '@features/post/model'
 import { useEffect } from 'react'
 
 export const useUrlSync = () => {

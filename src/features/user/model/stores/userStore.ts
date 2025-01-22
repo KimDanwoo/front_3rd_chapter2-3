@@ -1,4 +1,4 @@
-import { User } from '@entities/comment/model/types'
+import { User } from '@entities/user/model'
 import { create } from 'zustand'
 
 interface UserState {

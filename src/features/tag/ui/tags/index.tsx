@@ -1,5 +1,5 @@
-import { Post } from '@entities/comment/model/types'
-import { filterStore } from '@features/post/model/stores'
+import { Post } from '@entities/post/model'
+import { filterStore } from '@features/post/model'
 
 export const Tags = ({ post }: { post: Post }) => {
   const { selectedTag, setSelectedTag } = filterStore()

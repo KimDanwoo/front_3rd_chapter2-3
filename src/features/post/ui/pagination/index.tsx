@@ -1,6 +1,5 @@
 import { Button, Select } from '@shared/ui'
-import { filterStore } from '@features/post/model/stores'
-import { usePosts } from '../model/hooks'
+import { usePosts, filterStore } from '@features/post/model'
 
 export const Pagination = () => {
   const { limit, skip, setLimit, setSkip } = filterStore()
@@ -10,6 +9,7 @@ export const Pagination = () => {
     <div className="flex justify-between items-center">
       <div className="flex items-center gap-2">
         <span>표시</span>
+
         <Select.Container value={limit.toString()} onValueChange={(value: string) => setLimit(Number(value))}>
           <Select.Trigger className="w-[180px]">
             <Select.Value placeholder="10" />
@@ -20,6 +20,7 @@ export const Pagination = () => {
             <Select.Item value="30">30</Select.Item>
           </Select.Content>
         </Select.Container>
+
         <span>항목</span>
       </div>
 

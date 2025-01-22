@@ -1,4 +1,4 @@
-import { FilterAction, FilterState } from '@entities/comment/model/types'
+import { FilterAction, FilterState } from '@entities/filter/model'
 import { create } from 'zustand'
 
 export const filterStore = create<FilterState & FilterAction>((set, get) => ({

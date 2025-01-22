@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { postApi, PostsResponse } from '@features/post/api'
-import { PostsQueryProps } from '@entities/comment/model/types'
-import { DEFAULT_STALE_TIME } from '@entities/comment/model/constants'
+import { PostsQueryProps } from '@entities/post/model'
+import { DEFAULT_STALE_TIME } from '@shared/model'
 
 export function usePostsQuery({ limit, skip, tag, searchQuery }: PostsQueryProps) {
   return useQuery<PostsResponse, Error>({

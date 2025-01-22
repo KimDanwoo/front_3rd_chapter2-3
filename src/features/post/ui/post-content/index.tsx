@@ -1,9 +1,9 @@
-import { commentStore } from '@features/comment/model/stores'
-import { filterStore, postStore } from '@features/post/model/stores'
+import { commentStore } from '@features/comment/model'
+import { filterStore, postStore } from '@features/post/model'
 import { Button, HighlightText } from '@shared/ui'
 import { Plus } from 'lucide-react'
 
-export default function PostContent() {
+export const PostSection = () => {
   const { selectedPost } = postStore()
 
   const { newComment, setNewComment, setShowAddCommentDialog } = commentStore()

@@ -1,4 +1,4 @@
-import { Post, NewPost, PostMutationState } from '@entities/comment/model/types'
+import { Post, NewPost, PostMutationState } from '@entities/post/model'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postApi, PostsResponse } from '@features/post/api'
 

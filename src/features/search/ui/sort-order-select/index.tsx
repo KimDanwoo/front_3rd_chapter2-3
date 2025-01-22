@@ -1,5 +1,5 @@
 import { Select, SelectLayout } from '@shared/ui'
-import { filterStore } from '@features/post/model/stores'
+import { filterStore } from '@features/post/model'
 
 export const SortOrderSelect = () => {
   const { sortOrder, setSortOrder } = filterStore()

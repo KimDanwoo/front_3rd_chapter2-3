@@ -1,5 +1,4 @@
-import { usePosts } from '@features/post/model/hooks'
-import { postStore } from '@features/post/model/stores'
+import { usePosts, postStore } from '@features/post/model'
 import { Button, Input, Textarea } from '@shared/ui'
 import { useCallback } from 'react'
 

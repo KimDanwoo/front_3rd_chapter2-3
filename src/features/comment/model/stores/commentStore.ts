@@ -1,4 +1,4 @@
-import { CommentAction, CommentState } from '@entities/comment/model/types'
+import { CommentAction, CommentState } from '@entities/comment/model'
 import { create } from 'zustand'
 
 export const commentStore = create<CommentState & CommentAction>((set) => ({

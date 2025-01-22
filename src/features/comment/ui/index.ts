@@ -1,3 +1,1 @@
-export * from './UpdateCommentDialog'
-export * from './AddCommentDialog'
-export * from './CommentSection'
+export { CommentSection } from './comment-section'

@@ -1,4 +1,4 @@
-import { DEFAULT_STALE_TIME } from '@entities/comment/model/constants'
+import { DEFAULT_STALE_TIME } from '@shared/model'
 import { userApi, UsersResponse } from '@features/user/api'
 import { useQuery } from '@tanstack/react-query'
 

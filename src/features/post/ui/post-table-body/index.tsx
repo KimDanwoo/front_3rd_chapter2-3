@@ -1,12 +1,11 @@
 import { useMemo } from 'react'
-import { filterStore } from '../model/stores'
-import { usePosts } from '../model/hooks'
-import { useUsers } from '@features/user/model/hooks'
+import { filterStore, usePosts } from '@features/post/model'
+import { useUsers } from '@features/user/model'
 import { HighlightText, Table } from '@shared/ui'
 import { UserAvatar } from '@entities/user/ui'
-import { PostReactions } from '@entities/post/ui'
+import { PostReaction } from '@entities/post/ui'
 import { Tags } from '@features/tag/ui'
-import { PostActions } from './PostActions'
+import { PostActions } from '@features/post/ui'
 
 export const PostTableBody = () => {
   const { searchQuery } = filterStore()
@@ -40,7 +39,7 @@ export const PostTableBody = () => {
           </Table.Cell>
           <Table.Cell>{post.author && <UserAvatar author={post.author} onClick={openUserModal} />}</Table.Cell>
           <Table.Cell>
-            <PostReactions reactions={post.reactions} />
+            <PostReaction reactions={post.reactions} />
           </Table.Cell>
           <Table.Cell>
             <PostActions post={post} />

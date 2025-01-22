@@ -1,9 +1,8 @@
-import { Post } from '@entities/comment/model/types'
 import { Button } from '@shared/ui'
 import { Edit2, MessageSquare, Trash2 } from 'lucide-react'
+import { Post } from '@entities/post/model'
+import { postStore, usePosts } from '@features/post/model'
 import { useCallback } from 'react'
-import { postStore } from '../model/stores'
-import { usePosts } from '../model/hooks'
 
 export const PostActions = ({ post }: { post: Post }) => {
   const { deletePost } = usePosts()

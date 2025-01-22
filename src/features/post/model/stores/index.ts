@@ -1,2 +1,2 @@
-export * from './filterStore'
-export * from './postStore'
+export { filterStore } from './filterStore'
+export { postStore } from './postStore'

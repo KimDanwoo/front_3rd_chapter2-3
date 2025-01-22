@@ -1,6 +1,4 @@
-import { usePostsQuery } from './queries'
-import { usePostMutations } from './mutations'
-import { filterStore } from '../stores'
+import { usePostsQuery, usePostMutations, filterStore } from '@features/post/model'
 
 export function usePosts() {
   const { limit, skip, searchQuery, selectedTag } = filterStore()

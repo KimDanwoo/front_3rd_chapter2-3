@@ -1,5 +1,5 @@
-import { DEFAULT_STALE_TIME } from '@entities/comment/model/constants'
-import { Tag } from '@entities/comment/model/types'
+import { DEFAULT_STALE_TIME } from '@shared/model'
+import { Tag } from '@entities/tag/model'
 import { tagApi } from '@features/tag/api'
 import { useQuery } from '@tanstack/react-query'
 

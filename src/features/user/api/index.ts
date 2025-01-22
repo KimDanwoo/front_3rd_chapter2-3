@@ -1,5 +1,5 @@
 import { api } from '@app/api'
-import type { User } from '@entities/comment/model/types'
+import { User } from '@entities/user/model'
 
 export interface UsersResponse {
   users: User[]
